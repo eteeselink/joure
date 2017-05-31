@@ -40,6 +40,7 @@ void MainWindow::capture() {
     camera->start();
     camera->searchAndLock();
 
+    // can't not save a file (!). see imageSaved for more comments.
     imageCapture->capture(tempDir.filePath("joure.jpg"));
 }
 
@@ -52,10 +53,7 @@ void MainWindow::processCapturedImage(int requestId, const QImage& img)
 {
     Q_UNUSED(requestId);
 
-
     QImage scaled = img.scaledToWidth(300, Qt::FastTransformation);
-
-    //QMessageBox::warning(this, tr("omg!"), tr("size %1 x %2").arg(scaled.width()).arg(scaled.height()));
 
     QByteArray ba;
     QBuffer buffer(&ba);
@@ -64,16 +62,6 @@ void MainWindow::processCapturedImage(int requestId, const QImage& img)
     QByteArray base64jpg = ba.toBase64();
 
     upload(QString("egbert"), base64jpg);
-
-//    QImage scaledImage = img.scaled(ui->viewfinder->size(),
-//                                    Qt::KeepAspectRatio,
-//                                    Qt::SmoothTransformation);
-
-//    ui->lastImagePreviewLabel->setPixmap(QPixmap::fromImage(scaledImage));
-
-//    // Display captured image for 4 seconds.
-//    displayCapturedImage();
-//    QTimer::singleShot(4000, this, SLOT(displayViewfinder()));
 }
 
 void MainWindow::upload(QString& name, QByteArray& buffer) {
@@ -87,7 +75,12 @@ void MainWindow::upload(QString& name, QByteArray& buffer) {
 
 void MainWindow::imageSaved(int id, const QString &fileName)
 {
+    /* Weird stuff: QCameraImageCaptureThingo insists on saving a file on Windows.
+     * I somehow just can't get it to only give me a buffer. So, we let it save a
+     * damn file into a temp directory, patiently wait until the file is really saved,
+     * and only *then* unload the camera. */
     Q_UNUSED(id);
+    Q_UNUSED(filename);
 
     camera->unload();
     QTimer::singleShot(4000, this, SLOT(capture()));
