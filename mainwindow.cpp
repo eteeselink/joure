@@ -80,7 +80,7 @@ void MainWindow::imageSaved(int id, const QString &fileName)
      * damn file into a temp directory, patiently wait until the file is really saved,
      * and only *then* unload the camera. */
     Q_UNUSED(id);
-    Q_UNUSED(filename);
+    Q_UNUSED(fileName);
 
     camera->unload();
     QTimer::singleShot(4000, this, SLOT(capture()));
