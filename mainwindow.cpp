@@ -41,6 +41,7 @@ void MainWindow::capture() {
     camera->searchAndLock();
 
     // can't not save a file (!). see imageSaved for more comments.
+
     imageCapture->capture(tempDir.filePath("joure.jpg"));
 }
 
@@ -64,7 +65,7 @@ void MainWindow::processCapturedImage(int requestId, const QImage& img)
     upload(QString("egbert"), base64jpg);
 }
 
-void MainWindow::upload(QString& name, QByteArray& buffer) {
+void MainWindow::upload(const QString& name, QByteArray& buffer) {
     QFile file("C:/temp/some_name.html");
     file.open(QIODevice::WriteOnly);
     file.write("<img src=\"data:image/jpeg;base64,");

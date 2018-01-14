@@ -33,7 +33,7 @@ private:
     QCamera *camera;
     QCameraImageCapture *imageCapture;
 
-    void upload(QString& name, QByteArray& buffer);
+    void upload(const QString& name, QByteArray& buffer);
 
     QTemporaryDir tempDir;
 };
