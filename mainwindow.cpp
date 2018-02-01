@@ -7,10 +7,11 @@
 #include <QFile>
 #include <QTimer>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(Team& team, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    tempDir()
+    tempDir(),
+    team(team)
 {
     ui->setupUi(this);
 

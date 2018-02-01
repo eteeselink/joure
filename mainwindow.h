@@ -5,7 +5,7 @@
 #include <QCamera>
 #include <QCameraImageCapture>
 #include <QTemporaryDir>
-
+#include "team.h"
 
 namespace Ui {
 class MainWindow;
@@ -16,7 +16,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(Team& team, QWidget *parent = 0);
     ~MainWindow();
 
 private slots:
@@ -28,6 +28,7 @@ private slots:
     void capture();
 
 private:
+    Team& team;
     Ui::MainWindow *ui;
 
     QCamera *camera;
