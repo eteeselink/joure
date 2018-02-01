@@ -66,7 +66,8 @@ void MainWindow::processCapturedImage(int requestId, const QImage& img)
     scaled.save(&buffer, "JPG");
     QByteArray base64jpg = ba.toBase64();
 
-    upload(QString("egbert"), base64jpg);
+    //upload(QString("egbert"), base64jpg);
+    team.upload(base64jpg);
 }
 
 void MainWindow::upload(const QString& name, QByteArray& buffer) {
@@ -102,7 +103,7 @@ void MainWindow::displayCaptureError(int id, const QCameraImageCapture::Error er
 
 void MainWindow::on_actionEdit_settings_triggered()
 {
-    QMessageBox::information(this, "Joure", "Restart Joure for your changes to take effect.");
+    QMessageBox::information(this, "Joure", "Launching text editor...\n\nRestart Joure for your changes to take effect.");
     auto iniUrl = QUrl::fromLocalFile(iniFn);
     QDesktopServices::openUrl(iniUrl);
 }

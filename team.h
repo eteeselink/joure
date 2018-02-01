@@ -11,12 +11,10 @@ class Team : public QObject
 public:
     Team(QString teamId, QString username, QString displayName);
     void fetchData();
+    void upload(QByteArray& pixels);
     QString teamId;
     QString username;
     QString displayName;
-private slots:
-
-    void gotData(QNetworkReply *reply);
 };
 
 #endif // TEAM_H
