@@ -28,7 +28,8 @@ SOURCES += \
 
 HEADERS += \
         mainwindow.h \
-    team.h
+    team.h \
+    http.h
 
 FORMS += \
         mainwindow.ui

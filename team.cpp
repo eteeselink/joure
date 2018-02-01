@@ -1,14 +1,10 @@
 #include "team.h"
-#include <QNetworkRequest>
-#include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QSslConfiguration>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QCryptographicHash>
-
+#include "http.h"
 #include "vendor/benlau/asyncfuture.h"
-using namespace AsyncFuture;
 
 Team::Team(QString teamId, QString username, QString displayName) :
     teamId(teamId),
@@ -18,57 +14,11 @@ Team::Team(QString teamId, QString username, QString displayName) :
 
 }
 
-struct Req {
-    QNetworkRequest request;
-    QNetworkAccessManager *manager;
-};
-
-void fetch(
-        QString path,
-        std::function<void (QNetworkAccessManager*, QNetworkRequest&)> exec,
-        std::function<void (QNetworkReply*)> handle
-    ) {
-    QNetworkRequest request;
-
-    QSslConfiguration ssl = QSslConfiguration::defaultConfiguration();
-    ssl.setProtocol(QSsl::TlsV1_2);
-    request.setSslConfiguration(ssl);
-    request.setHeader(QNetworkRequest::ServerHeader, "application/json");
-    request.setUrl(QUrl("https://joure-public.firebaseio.com" + path));
-
-    QNetworkAccessManager *manager = new QNetworkAccessManager();
-    exec(manager, request);
-
-    QObject::connect(
-        manager, &QNetworkAccessManager::finished,
-        [=]( QNetworkReply* reply ) {
-            handle(reply);
-            reply->deleteLater();
-            manager->deleteLater();
-        }
-   );
-
-}
-
-void put(const QString& path, QByteArray& data, std::function<void (QNetworkReply*)> handle) {
-    fetch(
-        path,
-        [&](auto manager, auto request) { manager->put(request, data); },
-        handle
-    );
-}
-
-void get(const QString& path, std::function<void (QNetworkReply*)> handle) {
-    fetch(
-        path,
-        [](auto manager, auto request) { manager->get(request); },
-        handle
-    );
-}
 
 void Team::fetchData() {
-    get("/teams/" + teamId + ".json", [](auto reply) {
+    get<int>("/teams/" + teamId + ".json", [](auto reply) {
         qDebug() << "FETCHED" << reply->readAll();
+        return 0;
     });
 }
 
@@ -87,8 +37,9 @@ void Team::upload(QByteArray& base64image) {
         auto payload = QJsonDocument(member).toJson();
 
         auto path = "/teams/" + teamId + "/members/" + username + ".json";
-        put(path, payload, [](auto reply) {
+        put<int>(path, payload, [](auto reply) {
             qDebug() << "BOO" << reply->readAll();
+            return 0;
         });
     }
 
@@ -97,8 +48,9 @@ void Team::upload(QByteArray& base64image) {
         // but i don't know how.
         auto payload = "\"" + base64image + "\"";
 
-        put("/images/" + imageId + ".json?print=silent", payload, [](auto reply) {
+        put<int>("/images/" + imageId + ".json?print=silent", payload, [](auto reply) {
             qDebug() << "MOO" << reply->readAll();
+            return 0;
         });
     }
 }
