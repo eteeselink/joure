@@ -1,0 +1,10 @@
+teams:
+    [teamId]:                        // must be secret
+        name: string
+        members:
+            [username]:
+                lastShot: timestamp  // update to now() by PUTing {".sv": "timestamp"}
+                displayName: string
+                imageId: string      // hash(teamId, username)
+images:
+    [imageId]: base64string          // is secret, because derived from teamId
