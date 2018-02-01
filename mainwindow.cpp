@@ -6,12 +6,15 @@
 #include <QBuffer>
 #include <QFile>
 #include <QTimer>
+#include <QDesktopServices>
+#include <QUrl>
 
-MainWindow::MainWindow(Team& team, QWidget *parent) :
+MainWindow::MainWindow(Team& team, QString iniFn, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     tempDir(),
-    team(team)
+    team(team),
+    iniFn(iniFn)
 {
     ui->setupUi(this);
 
@@ -95,4 +98,11 @@ void MainWindow::displayCaptureError(int id, const QCameraImageCapture::Error er
     Q_UNUSED(id);
     Q_UNUSED(error);
     QMessageBox::warning(this, tr("Image Capture Error"), errorString);
+}
+
+void MainWindow::on_actionEdit_settings_triggered()
+{
+    QMessageBox::information(this, "Joure", "Restart Joure for your changes to take effect.");
+    auto iniUrl = QUrl::fromLocalFile(iniFn);
+    QDesktopServices::openUrl(iniUrl);
 }

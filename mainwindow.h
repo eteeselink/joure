@@ -16,7 +16,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(Team& team, QWidget *parent = 0);
+    explicit MainWindow(Team& team, QString iniFn, QWidget *parent = 0);
     ~MainWindow();
 
 private slots:
@@ -27,8 +27,11 @@ private slots:
     void imageSaved(int id, const QString &fileName);
     void capture();
 
+    void on_actionEdit_settings_triggered();
+
 private:
     Team& team;
+    QString iniFn;
     Ui::MainWindow *ui;
 
     QCamera *camera;

@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     qDebug() << "hello!";
     team.fetchData();
 
-    MainWindow w(team);
+    MainWindow w(team, iniFn);
     w.show();
 
     return a.exec();
